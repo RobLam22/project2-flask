@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}About - Inspirest{% endblock %}
+
+{% block content %}
+<h1>Welcome To Inspirest</h1>
+<div>
+<h3>How does this website work?</h3>
+<p>Simply sign in, create a new board and start uploading images to fill up the page! Keep your board to yourself or share it with others!</p>
+<p>Using the example below from the homescreen, we can see a board full of landscapes!</p>
+</div>
+    {% for item in home_list: %}
+    
+    <div><img src='{{ item[3] }}'><br>
+        {{ item[1] + ", " + item[2] }} </div>
+    <hr>
+
+    {% endfor %}
+
+{% endblock %}

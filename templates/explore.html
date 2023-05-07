@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Explore - Inspirest{% endblock %}
+
+{% block content %}
+<h1>Welcome To Inspirest</h1>
+<div>
+<h3>Available boards</h3>
+<p>Here is all the list of available boards:</p>
+<p>Here is all the list of available boards:</p>
+</div>
+<ul>
+    {% for item in board_list: %}
+    
+    <li> {{ item[1] + ", " + item[2] }} </li>
+
+    {% endfor %}
+</ul>
+
+
+{% endblock %}
