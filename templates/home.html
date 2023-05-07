@@ -1,0 +1,12 @@
+{% block content %}
+<ul>
+    {% for item in home_list: %}
+    
+    <li><img src='{{ item[3] }}'><br>
+        {{ item[1] + ", " + item[2] }} </li>
+
+    {% endfor %}
+  </ul>
+
+
+{% endblock %}
