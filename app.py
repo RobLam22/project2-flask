@@ -10,9 +10,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def homepage(): 
-    # connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("pgrender"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-    connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
+    connection = psycopg2.connect(  host=os.getenv("PGHOST", "dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com"), 
+                                    user=os.getenv("pgrender"), 
+                                    password=os.getenv("PGPASSWORD", "YsRbSGWctAQTPL8pX5sOear938QrwlLW"), 
+                                    port=os.getenv("PGPORT", "5432"), 
+                                    dbname=os.getenv("PGDATABASE", "flaskdb_uiod"))
+    # connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+    # connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM homepage_board;")
     results = cursor.fetchall()
@@ -22,7 +26,11 @@ def homepage():
 @app.route('/about')
 def about_page():
     # connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+    connection = psycopg2.connect(  host=os.getenv("PGHOST", "dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com"), 
+                                user=os.getenv("pgrender"), 
+                                password=os.getenv("PGPASSWORD", "YsRbSGWctAQTPL8pX5sOear938QrwlLW"), 
+                                port=os.getenv("PGPORT", "5432"), 
+                                dbname=os.getenv("PGDATABASE", "flaskdb_uiod"))
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM homepage_board;")
     results = cursor.fetchall()
@@ -31,8 +39,12 @@ def about_page():
         
 @app.route('/explore')
 def explore_page():
-    connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+    # connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
+    connection = psycopg2.connect(  host=os.getenv("PGHOST", "dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com"), 
+                                user=os.getenv("pgrender"), 
+                                password=os.getenv("PGPASSWORD", "YsRbSGWctAQTPL8pX5sOear938QrwlLW"), 
+                                port=os.getenv("PGPORT", "5432"), 
+                                dbname=os.getenv("PGDATABASE", "flaskdb_uiod"))
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM board_list;")
     results = cursor.fetchall()
@@ -61,7 +73,11 @@ def login_page():
 @app.route('/login', methods=['POST'])
 def login_action():
     # connection = psycopg2.connect(dbname="p2", port=5433, user="postgres", password="roblam")
-    connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+    connection = psycopg2.connect(  host=os.getenv("PGHOST", "dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com"), 
+                                user=os.getenv("pgrender"), 
+                                password=os.getenv("PGPASSWORD", "YsRbSGWctAQTPL8pX5sOear938QrwlLW"), 
+                                port=os.getenv("PGPORT", "5432"), 
+                                dbname=os.getenv("PGDATABASE", "flaskdb_uiod"))
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM users;")
     results = cursor.fetchall()
