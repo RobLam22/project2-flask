@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, render_template, redirect, session
 import psycopg2
 # from models import food, user
@@ -132,6 +133,6 @@ def homepage():
 
 #     return render_template('/view_board.html')
 
-# if __name__ == '__main__':
-#     # app.run(debug=True, port=os.getenv("PORT", default=5000))
-#     app.run(debug=True)
+if __name__ == '__main__':
+    # app.run(debug=True, port=os.getenv("PORT", default=5000))
+    app.run(debug=True)

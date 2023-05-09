@@ -10,7 +10,8 @@ CREATE TABLE board_list (
   board_name TEXT NOT NULL UNIQUE,
   description TEXT,
   is_private BOOLEAN,
-  user_id_access BIGINT
+  user_id_access BIGINT,
+  created_by BIGINT
 );
 
 CREATE TABLE homepage_board (
@@ -33,19 +34,19 @@ CREATE TABLE boardgame_board (
 
 -- Add homepage_board and boardgame_board to board_list
 INSERT INTO board_list(board_name, description, is_private) VALUES ('homepage_board',  'What a board can look like!', FALSE);
-INSERT INTO board_list(board_name, description, is_private) VALUES ('boardgame_board', 'Roberts Game Collection!',    TRUE);
+INSERT INTO board_list(board_name, description, is_private) VALUES ('boardgame_board', 'Roberts Game Collection!',     FALSE);
 
 -- Homepage Board
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/10/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/11/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/12/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/13/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/14/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/15/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/16/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/17/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/18/200/300', 1, 1);
-INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/19/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/10/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/11/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/12/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/13/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/14/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/15/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/16/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/17/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/18/200/300', 1, 1);
+INSERT INTO homepage_board(description, hashtag, image, user_id, board_list_id) VALUES ('Example Image', 'Landscapes', 'https://picsum.photos/id/19/200/300', 1, 1);
 
 -- Roberts Boardgame_board
 INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Catan',            'boardgame', 'https://cf.geekdo-images.com/W3Bsga_uLP9kO91gZ7H8yw__imagepage/img/M_3Vg1j2HlNgkv7PL2xl2BJE2bw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic2419375.jpg', 1, 2);
@@ -53,4 +54,6 @@ INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id)
 INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Wingspan',         'boardgame', 'https://cf.geekdo-images.com/7k_nOxpO9OGIjhLq2BUZdA__imagepage/img/zoz-t_z9nqqxL7OwQenbqp9PRl8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3163924.jpght', 1, 2);
 INSERT INTO boardgame_board(description, hashtag, image, user_id, board_list_id) VALUES ('Yura Yura Penguin','boardgame', 'https://cf.geekdo-images.com/yDySl7jc4Vy2Mso-GgXOag__imagepage/img/qNaJK1Tz7GHvxjLQEi--2pXsIw8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5783938.jpg', 1, 2);
 
+
+-- psql -d p2 -f reset_db.sql -p 5433
 -- PGPASSWORD=YsRbSGWctAQTPL8pX5sOear938QrwlLW psql -h dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com -U pgrender -f reset_db.sql flaskdb_uiod 

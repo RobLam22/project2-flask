@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Create - Inspirest{% endblock %}
+
+{% block content %}
+<h1>Create a new board!</h1>
+<form method="POST">
+    <label for="board_name">Board Name</label>
+    <input id="board_name" type="text" name="board_name" required>
+
+    <label for="description">Description</label>
+    <input id="description" type="text" name="description" required>
+
+    <label for="access">Private?</label>
+    <input id="access" type="checkbox" name="access">
+
+    <input type="submit">
+</form>
+{% endblock %}
