@@ -50,7 +50,7 @@ def signup_action():
 
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO users (name, email, password_hash, signed_in) VALUES (%s, %s, %s, %s);", [name, email, hashed_pw, False])
+    cursor.execute("INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s);", [name, email, hashed_pw])
     connection.commit()
     connection.close()
 
@@ -71,23 +71,31 @@ def login_action():
     password = request.form.get('password')
     cursor.execute("SELECT * FROM users WHERE email=%s", [email])
     user_info = cursor.fetchall()
+    print(user_info)
     stored_password = user_info[0][3]
     isValidPassword = bcrypt.checkpw(password.encode(), stored_password.encode())
-    # look into sessions, might not need signed_in column
-    curr_user = user_info[0][2]
-    cursor.execute(f"UPDATE users SET signed_in=true WHERE id={user_info[0][0]};")
-    connection.commit()
-    cursor.execute("SELECT * FROM users WHERE email=%s", [email])
-    results2 = cursor.fetchall()
-    # print(results2[0])
-    session['email'] = email
-    print(session['email'])
+    curr_user = user_info[0][1]
+    print(curr_user)
     connection.close()
     if isValidPassword == True:
-        print("WORKS")
+        session['id'] = user_info[0][0]
+        session['name'] = user_info[0][1]
+        session['email'] = email
         return redirect('/')
     else:
         return render_template('/login_error.html')
+
+@app.route("/logout")
+def logout_page():
+    return render_template("/logout.html")
+
+@app.route("/logged_out", methods=['POST'])
+def logout_action():
+    session['id'] = None
+    session['name'] = None
+    session['email'] = None
+    return redirect("/")
+        
 
 @app.route('/new_board')
 def new_board():
@@ -120,10 +128,15 @@ def new_board_action():
 def view_board(name):
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM {name};")
+    cursor.execute(f"SELECT * FROM board_list WHERE board_name = '{name}';")
+    board_data = cursor.fetchall()
+    print(board_data)
+    board_name = board_data[0][1]
+    cursor.execute(f"SELECT * FROM {board_name};")
+    results = cursor.fetchall()
     connection.close()
 
-    return render_template('/view_board.html')
+    return render_template('/view_board.html', board_list = results)
 
 if __name__ == '__main__':
     # app.run(debug=True, port=os.getenv("PORT", default=5000))

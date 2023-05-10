@@ -12,19 +12,22 @@
         <a href="/about">About</a>
         <a href="/explore">Explore</a>
         <a href="/new_board">New Board</a>
+        {% if session["id"] != None %}
+        <a href="/account">Account</a>
+        <a href="/logout">Logout</a>
+        {% else %}
         <a href="/signup">Signup</a>
-        {%  if logged_in == true %}
-        <a href="/logout">Logout</a>
-        {% else %}
-        <a href="/login">Login</a>
-        {% endif %}
-        {% if session["email"] %}
-        Hello {{ session["email"] }}!
-        <a href="/logout">Logout</a>
-        {% else %}
         <a href="/login">Login</a>
         {% endif %}
     </nav>
+    
+    <p>
+    {% if session["id"] != None %}
+    Hello {{ session["name"] }}!
+    {% else %}
+    Please login!
+    {% endif %}
+    </p>
 
     <div>
         {% block content %} {% endblock %}

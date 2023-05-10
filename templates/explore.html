@@ -10,7 +10,7 @@
 <ul>
     {% for item in board_list: %}
     
-    <li> {{ item[1] + ", " + item[2] }} </li>
+    <li> <a href="board_{{ item[1] }}">{{ item[1] }}</a>, {{ item[2] }}</li>
 
     {% endfor %}
 </ul>

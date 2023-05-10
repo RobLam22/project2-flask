@@ -2,7 +2,3 @@ Flask
 Gunicorn
 psycopg2
 bcrypt
-request
-session
-render_template
-redirect
