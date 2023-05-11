@@ -1,0 +1,34 @@
+<!-- id SERIAL PRIMARY KEY,
+description TEXT,
+hashtag TEXT,
+image TEXT,
+user_id BIGINT,
+board_list_id BIGINT -->
+
+<h3>Edit or Delete this post!</h3>
+<form method="POST" action="/api/board_data/edit/<id>">
+    <input hidden name="post_id" value="{{ post_data[0] }}">
+    
+    <label for="description">Description:</label>
+    <input id="description" type="text" name="description" value="{{ post_data[1] }}" required>
+    <br>
+    <label for="hashtags">Hashtags:</label>
+    <input id="hashtags" type="text" name="hashtags" value="{{ post_data[2] }}" placeholder="#example#hashtag#text" required>
+    <br>
+    <label for="image">Image URL:</label>
+    <input id="image" type="text" name="image" value="{{ post_data[3] }}" required>
+    <br>
+    <input hidden name="user_id" value="{{ session['id'] }}">
+    <input hidden name="board_list_id" value="{{ post_data[5] }}">
+    <br>
+    <p>Press the button below to edit the post</p>
+    <input type="submit" value="Edit!">
+    <p>Press the button below to delete the post</p>
+    <input type="submit" value="Delete!" formaction="/api/board_data/delete/<id>">
+</form>
+
+<h3>Current post info</h3>
+<div name="{{ post_data[0] }}"><img src='{{ post_data[3] }}'><br>
+    {{ post_data[1] + ", " + post_data[2] }} 
+</div>
+

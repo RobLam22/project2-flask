@@ -1,9 +1,3 @@
-{% extends 'base.html' %}
-{% block title %}{{ board_desc }} - Inspirest{% endblock %}
-
-{% block content %}
-<h1 name="table_name">{{ board_desc }}</h1>
-
 <!-- id SERIAL PRIMARY KEY,
 description TEXT,
 hashtag TEXT,
@@ -16,39 +10,19 @@ board_list_id BIGINT -->
 <form method="POST" action="api/board_data/add">
     <input hidden name="table_name" value="{{ board_name }}">
     
-    <label for="description">Description:</label>
+    <label for="description">Description</label>
     <input id="description" type="text" name="description" required>
-    <br>
+    
     <label for="hashtags">Hashtags:</label>
     <input id="hashtags" type="text" name="hashtags" placeholder="#example#hashtag#text" required>
-    <br>
+
     <label for="image">Image URL:</label>
     <input id="image" type="text" name="image" required>
-    <br>
+
     <input hidden name="user_id" value="{{ session['id'] }}">
     <input hidden name="board_list_id" value="{{ board_id }}">
-    <br>
+
     <input type="submit" value="Add!">
 </form>
 <h3>All the saved items to your board are below!</h3>
 {% endif %}
-
-<ul>
-{% for item in board_list: %}
-
-<div name="{{ item[0] }}"><img src='{{ item[3] }}'><br>
-    {{ item[1] + ", " + item[2] }} 
-    {% if session['id'] == creator_id %}
-    <form method="POST">
-        <input hidden name="table_name" value="{{ board_name }}">
-        <button type="submit" name="edit"   formaction="/form/board_data/edit/{{ item[0] }}">Edit / Delete</button>
-    </form>
-    {% endif %}
-</div>
-<hr>
-
-{% endfor %}
-</ul>
-
-
-{% endblock %}

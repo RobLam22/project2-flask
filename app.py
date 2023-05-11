@@ -96,7 +96,6 @@ def logout_action():
     session['email'] = None
     return redirect("/")
         
-
 @app.route('/new_board')
 def new_board():
     return render_template('/new_board.html')
@@ -109,8 +108,7 @@ def new_board_action():
 
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM users WHERE signed_in = True;")
-    user_id = cursor.fetchall()[0][0]
+    user_id = session['id']
     if is_private == 'on':
         cursor.execute("INSERT INTO board_list (board_name, description, is_private, user_id_access, created_by) VALUES (%s, %s, %s, %s, %s);", [board_name, description, True, user_id, user_id])
     else:
@@ -121,7 +119,6 @@ def new_board_action():
     connection.commit()
     connection.close()
 
-    # return redirect('/board_<name>')
     return redirect('/board_<{board_name}>')
 
 @app.route('/board_<name>')
@@ -130,13 +127,75 @@ def view_board(name):
     cursor = connection.cursor()
     cursor.execute(f"SELECT * FROM board_list WHERE board_name = '{name}';")
     board_data = cursor.fetchall()
-    print(board_data)
+    # print(board_data) # [(2, 'boardgame_board', 'Roberts Game Collection!', False, None, 1)]
+    board_id = board_data[0][0]
+    # print(board_id) # 2
     board_name = board_data[0][1]
+    # print(board_name) # boardgame_board
+    board_description = board_data[0][2]
+    # print(board_description) # Roberts Game Collection!
+    created_by_id = board_data[0][5]
+    # print(created_by_id) # 1
     cursor.execute(f"SELECT * FROM {board_name};")
     results = cursor.fetchall()
     connection.close()
 
-    return render_template('/view_board.html', board_list = results)
+    return render_template('/view_board.html', board_list = results, board_name = board_name, board_desc = board_description, creator_id = created_by_id, board_id = board_id)
+
+@app.route('/api/board_data/add', methods=["POST"])
+def add_to_table_action():
+    form = request.form
+    table_name = form.get("table_name")
+    print(table_name) #boardgame_board
+    description = form.get("description")
+    hashtags = form.get("hashtags")
+    image = form.get("image")
+    user_id = form.get("user_id")
+    board_list_id = form.get("board_list_id")
+    connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    cursor = connection.cursor()
+    cursor.execute(f"INSERT INTO {table_name} (description, hashtag, image, user_id, board_list_id) VALUES (%s, %s, %s, %s, %s);", [description, hashtags, image, user_id, board_list_id])
+    connection.commit()
+    connection.close()
+    # throws error? needs to redirect then redirect?
+    return redirect('/board_{table_name}')
+
+@app.route('/form/board_data/edit/<id>', methods=["POST"])
+def edit_post_page(id):
+    connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM boardgame_board WHERE id={id};")
+    post_result = cursor.fetchall()[0] #(1, 'Catan', '#boardgame', 'https://cf.geekdo-images.com/W3Bsga_uLP9kO91gZ7H8yw__imagepage/img/M_3Vg1j2HlNgkv7PL2xl2BJE2bw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic2419375.jpg', 1, 2)
+    connection.close()
+    # throws error? needs to redirect then redirect?
+    return render_template('edit.html', post_data=post_result)
+
+@app.route('/api/board_data/edit/<id>', methods=["POST"])
+def edit_post_action(id):
+    new_data = request.form
+    post_id = new_data.get("post_id")
+    description = new_data.get("description")
+    hashtags = new_data.get("hashtags")
+    image = new_data.get("image")
+    user_id = new_data.get("user_id")
+    board_list_id = new_data.get("board_list_id")
+    connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    cursor = connection.cursor()
+    cursor.execute(f"UPDATE boardgame_board SET description='{description}', hashtag='{hashtags}', image='{image}', user_id={user_id}, board_list_id={board_list_id} WHERE id={post_id} ;")
+    connection.commit()
+    connection.close()
+    return redirect('/board_boardgame_board')
+
+@app.route('/api/board_data/delete/<id>', methods=["POST"])
+def delete_post_action(id):
+    new_data = request.form
+    post_id = new_data.get("post_id")
+    connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    cursor = connection.cursor()
+    cursor.execute(f"DELETE FROM boardgame_board WHERE id={post_id};")
+    connection.commit()
+    connection.close()
+    return redirect('/board_boardgame_board')
 
 if __name__ == '__main__':
     # app.run(debug=True, port=os.getenv("PORT", default=5000))
