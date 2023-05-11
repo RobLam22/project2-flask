@@ -1,11 +1,8 @@
-import os
 from flask import Flask, request, render_template, redirect, session
+import os
 import psycopg2
 # from models import food, user
 import bcrypt
-
-# my_secret_key=os.getenv("SECRET_KEY")
-# app.config['SECRET_KEY'] = my_secret_key
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
