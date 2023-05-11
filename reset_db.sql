@@ -51,7 +51,7 @@ CREATE TABLE cityscape_board (
 
 -- Add homepage_board and boardgame_board to board_list
 INSERT INTO board_list(board_name, description, is_private, created_by) VALUES ('homepage_board',  'What a board can look like!',  FALSE, 1);
-INSERT INTO board_list(board_name, description, is_private, created_by) VALUES ('boardgame_board', 'Roberts Game Collection!',     TRUE, 1);
+INSERT INTO board_list(board_name, description, is_private, user_id_access, created_by) VALUES ('boardgame_board', 'Roberts Game Collection!',  TRUE,'1,2,3', 1);
 INSERT INTO board_list(board_name, description, is_private, created_by) VALUES ('macbook_board',   'Macbook Photos!',              FALSE, 1);
 INSERT INTO board_list(board_name, description, is_private, created_by) VALUES ('cityscape_board', 'Cityscape Photos!',            FALSE, 1);
 
@@ -105,4 +105,5 @@ INSERT INTO cityscape_board(description, hashtag, image, user_id, board_list_id)
 
 
 -- psql -d p2 -f reset_db.sql -p 5433
+-- PGPASSWORD=YsRbSGWctAQTPL8pX5sOear938QrwlLW psql -h dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com -U pgrender flaskdb_uiod 
 -- PGPASSWORD=YsRbSGWctAQTPL8pX5sOear938QrwlLW psql -h dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com -U pgrender -f reset_db.sql flaskdb_uiod 

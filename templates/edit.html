@@ -4,10 +4,13 @@ hashtag TEXT,
 image TEXT,
 user_id BIGINT,
 board_list_id BIGINT -->
+{% extends 'base.html' %}
 
+{% block content %}
 <h3>Edit or Delete this post!</h3>
-<form method="POST" action="/api/board_data/edit/<id>">
+<form id="edit" method="PATCH" action="/edit/{{ table_name }}/{{ id }}">
     <input hidden name="post_id" value="{{ post_data[0] }}">
+    <input hidden name="table_name" value="{{ table_name }}">
     
     <label for="description">Description:</label>
     <input id="description" type="text" name="description" value="{{ post_data[1] }}" required>
@@ -23,12 +26,33 @@ board_list_id BIGINT -->
     <br>
     <p>Press the button below to edit the post</p>
     <input type="submit" value="Edit!">
-    <p>Press the button below to delete the post</p>
-    <input type="submit" value="Delete!" formaction="/api/board_data/delete/<id>">
 </form>
+
+<p>Press the button below to delete the post</p>
+<button id="delete">Delete!</button>
 
 <h3>Current post info</h3>
 <div name="{{ post_data[0] }}"><img src='{{ post_data[3] }}'><br>
     {{ post_data[1] + ", " + post_data[2] }} 
 </div>
+
+<script>
+    const form = document.querySelector('#edit');
+    function editPost(e) {
+        e.preventDefault()
+        return fetch('/edit/{{ table_name }}/{{ id }}', {method: 'PATCH', body: new FormData(form)})
+        .then(() => window.location.replace('/{{ table_name }}'))
+    }
+    form.addEventListener('submit', editPost);
+
+    function deletePost() {
+        return fetch('/delete/{{ table_name }}/{{ id }}', {
+            method: 'DELETE',
+     }).then(() => window.location.replace('/{{ table_name }}'))
+    }
+    const button = document.querySelector('#delete');
+    button.addEventListener('click', deletePost);
+</script>
+{% endblock %}
+
 

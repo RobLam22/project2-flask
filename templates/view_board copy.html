@@ -11,11 +11,11 @@ image TEXT,
 user_id BIGINT,
 board_list_id BIGINT -->
 
-{% if str_session_id in user_access: %}
+{% if str(session['id']) in user_access: %}
 
 {% if session['id'] == creator_id %}
 <h3>Add to your board!</h3>
-<form method="POST" action="/{{board_name}}">
+<form method="POST" action="api/board_data/add">
     <input hidden name="table_name" value="{{ board_name }}">
     
     <label for="description">Description:</label>
@@ -42,7 +42,8 @@ board_list_id BIGINT -->
     {{ item[1] + ", " + item[2] }} 
     {% if session['id'] == creator_id %}
     <form method="GET">
-        <button type="submit" name="edit"   formaction="/edit/{{ board_name }}/{{ item[0] }}">Edit / Delete</button>
+        <input hidden name="table_name" value="{{ board_name }}">
+        <button type="submit" name="edit"   formaction="/form/board_data/edit/{{ board_name }}/{{ item[0] }}">Edit / Delete</button>
     </form>
     {% endif %}
 </div>
@@ -50,8 +51,9 @@ board_list_id BIGINT -->
 
 {% endfor %}
 </ul>
+
 {% else %}
-<p>You do not have access. Please <a href="/login">login</a> with the correct user.</p>
+<p>You do not have access</p>
 {% endif %}
 
 {% endblock %}

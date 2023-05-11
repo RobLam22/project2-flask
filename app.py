@@ -20,7 +20,7 @@ def homepage():
 def about_page():
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM homepage_board;")
+    cursor.execute("SELECT * FROM macbook_board;")
     results = cursor.fetchall()
     connection.close()
     return render_template('about.html', home_list = results)
@@ -82,6 +82,20 @@ def login_action():
     else:
         return render_template('/login_error.html')
 
+@app.route('/account')
+def account_page():
+    connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM users WHERE id={session['id']};")
+    user_info = cursor.fetchall()[0]
+    cursor.execute(f"SELECT * FROM board_list WHERE created_by={session['id']};")
+    user_created_tables = cursor.fetchall()
+    cursor.execute(f"SELECT * FROM board_list WHERE user_id_access LIKE '{session['id']}' AND created_by != {session['id']};")
+    non_user_tables = cursor.fetchall()
+    cursor.execute(f"SELECT * FROM board_list WHERE created_by!={session['id']};")
+    non_user_tables = cursor.fetchall()
+    return render_template('/account.html', boards_owned = user_created_tables, boards_not_owned=non_user_tables)
+
 @app.route("/logout")
 def logout_page():
     return render_template("/logout.html")
@@ -116,34 +130,31 @@ def new_board_action():
     connection.commit()
     connection.close()
 
-    return redirect('/board_<{board_name}>')
+    return redirect(f'/{board_name}')
 
-@app.route('/board_<name>')
+@app.route('/<name>')
 def view_board(name):
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
     cursor.execute(f"SELECT * FROM board_list WHERE board_name = '{name}';")
-    board_data = cursor.fetchall()
-    # print(board_data) # [(2, 'boardgame_board', 'Roberts Game Collection!', False, None, 1)]
+    board_data = cursor.fetchall() # [(2, 'boardgame_board', 'Roberts Game Collection!', False, None, 1)]
     board_id = board_data[0][0]
-    # print(board_id) # 2
     board_name = board_data[0][1]
-    # print(board_name) # boardgame_board
     board_description = board_data[0][2]
-    # print(board_description) # Roberts Game Collection!
+    private_check = board_data[0][3]
+    user_access = board_data[0][4]
+    str_session_id = str(session['id'])
     created_by_id = board_data[0][5]
-    # print(created_by_id) # 1
     cursor.execute(f"SELECT * FROM {board_name};")
     results = cursor.fetchall()
     connection.close()
 
-    return render_template('/view_board.html', board_list = results, board_name = board_name, board_desc = board_description, creator_id = created_by_id, board_id = board_id)
+    return render_template('/view_board.html', str_session_id=str_session_id, user_access=user_access, board_list = results, board_name = board_name, board_desc = board_description, creator_id = created_by_id, board_id = board_id)
 
-@app.route('/api/board_data/add', methods=["POST"])
-def add_to_table_action():
+@app.route('/<name>', methods=["POST"])
+def add_to_table_action(name):
     form = request.form
     table_name = form.get("table_name")
-    print(table_name) #boardgame_board
     description = form.get("description")
     hashtags = form.get("hashtags")
     image = form.get("image")
@@ -154,21 +165,20 @@ def add_to_table_action():
     cursor.execute(f"INSERT INTO {table_name} (description, hashtag, image, user_id, board_list_id) VALUES (%s, %s, %s, %s, %s);", [description, hashtags, image, user_id, board_list_id])
     connection.commit()
     connection.close()
-    # throws error? needs to redirect then redirect?
-    return redirect('/board_{table_name}')
+    return redirect(f'/{table_name}')
 
-@app.route('/form/board_data/edit/<id>', methods=["POST"])
-def edit_post_page(id):
+@app.route('/edit/<table_name>/<id>')
+def edit_post_page(table_name, id):
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM boardgame_board WHERE id={id};")
+    cursor.execute(f"SELECT * FROM {table_name} WHERE id={id};")
     post_result = cursor.fetchall()[0] #(1, 'Catan', '#boardgame', 'https://cf.geekdo-images.com/W3Bsga_uLP9kO91gZ7H8yw__imagepage/img/M_3Vg1j2HlNgkv7PL2xl2BJE2bw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic2419375.jpg', 1, 2)
     connection.close()
     # throws error? needs to redirect then redirect?
-    return render_template('edit.html', post_data=post_result)
+    return render_template('edit.html', post_data=post_result, table_name=table_name, id=id)
 
-@app.route('/api/board_data/edit/<id>', methods=["POST"])
-def edit_post_action(id):
+@app.route('/edit/<table_name>/<id>', methods=["PATCH"])
+def edit_post_action(table_name, id):
     new_data = request.form
     post_id = new_data.get("post_id")
     description = new_data.get("description")
@@ -178,21 +188,21 @@ def edit_post_action(id):
     board_list_id = new_data.get("board_list_id")
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute(f"UPDATE boardgame_board SET description='{description}', hashtag='{hashtags}', image='{image}', user_id={user_id}, board_list_id={board_list_id} WHERE id={post_id} ;")
+    cursor.execute(f"SELECT * FROM board_list WHERE id = {board_list_id};")
+    table_name = cursor.fetchall()[0][1]
+    cursor.execute(f"UPDATE {table_name} SET description='{description}', hashtag='{hashtags}', image='{image}', user_id={user_id}, board_list_id={board_list_id} WHERE id={post_id} ;")
     connection.commit()
     connection.close()
-    return redirect('/board_boardgame_board')
+    return {}, 200
 
-@app.route('/api/board_data/delete/<id>', methods=["POST"])
-def delete_post_action(id):
-    new_data = request.form
-    post_id = new_data.get("post_id")
+@app.route('/delete/<table_name>/<id>', methods=["DELETE"])
+def delete_post_action(table_name, id):
     connection = psycopg2.connect(host=os.getenv("PGHOST"), user=os.getenv("user"), password=os.getenv("PGPASSWORD"), port=os.getenv("PGPORT"), dbname=os.getenv("PGDATABASE"))
     cursor = connection.cursor()
-    cursor.execute(f"DELETE FROM boardgame_board WHERE id={post_id};")
+    cursor.execute(f"DELETE FROM {table_name} WHERE id={id};")
     connection.commit()
     connection.close()
-    return redirect('/board_boardgame_board')
+    return {}, 200
 
 if __name__ == '__main__':
     # app.run(debug=True, port=os.getenv("PORT", default=5000))
