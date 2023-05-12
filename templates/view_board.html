@@ -4,52 +4,68 @@
 {% block content %}
 <h1 name="table_name">{{ board_desc }}</h1>
 
-<!-- id SERIAL PRIMARY KEY,
-description TEXT,
-hashtag TEXT,
-image TEXT,
-user_id BIGINT,
-board_list_id BIGINT -->
+{% if user_access.__contains__(str_session_id) %}
+    {% if private_check == True %}
+        {% if session['id'] == creator_id %}
+            <h3>Share this board with another user!</h3>
+            <form method="POST" action="/board/{{board_name}}/user_access">
+                <input hidden name="table_name" value="{{ board_name }}">
+                <label for="email">Email:</label>
+                <input id="email" type="text" name="email" required>
+                <input hidden name="user_id" value="{{ session['id'] }}">
+                <input hidden name="board_list_id" value="{{ board_id }}">
+                <input type="submit" value="Share!">
+            </form>
+            <p>Other Users with Access</p>
+            <ul>
+            {% for user in user_emails %}
+                {% if user[0] in users_id %}
+                    {% if user[0] != session['id'] %}
+                        <li>{{ user[1] }}</li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </ul>
+    {% endif %}
+{% endif %}
 
-{% if str_session_id in user_access: %}
-
-{% if session['id'] == creator_id %}
-<h3>Add to your board!</h3>
-<form method="POST" action="/{{board_name}}">
-    <input hidden name="table_name" value="{{ board_name }}">
-    
-    <label for="description">Description:</label>
-    <input id="description" type="text" name="description" required>
-    <br>
-    <label for="hashtags">Hashtags:</label>
-    <input id="hashtags" type="text" name="hashtags" placeholder="#example#hashtag#text" required>
-    <br>
-    <label for="image">Image URL:</label>
-    <input id="image" type="text" name="image" required>
-    <br>
-    <input hidden name="user_id" value="{{ session['id'] }}">
-    <input hidden name="board_list_id" value="{{ board_id }}">
-    <br>
-    <input type="submit" value="Add!">
-</form>
-<h3>All the saved items to your board are below!</h3>
+{% if user_access.__contains__(str_session_id) %}
+    <h3>Add to your board!</h3>
+    <form method="POST" action="/board/{{board_name}}">
+        <input hidden name="table_name" value="{{ board_name }}">
+        
+        <label for="description">Description:</label>
+        <input id="description" type="text" name="description" required>
+        <br>
+        <label for="hashtags">Hashtags:</label>
+        <input id="hashtags" type="text" name="hashtags" placeholder="#example#hashtag#text" required>
+        <br>
+        <label for="image">Image URL:</label>
+        <input id="image" type="text" name="image" required>
+        <br>
+        <input hidden name="user_id" value="{{ session['id'] }}">
+        <input hidden name="board_list_id" value="{{ board_id }}">
+        <br>
+        <input type="submit" value="Add!">
+    </form>
+    <hr>
+    <h3>All the saved items to your board are below!</h3>
 {% endif %}
 
 <ul>
 {% for item in board_list: %}
-
-<div name="{{ item[0] }}"><img src='{{ item[3] }}'><br>
-    {{ item[1] + ", " + item[2] }} 
-    {% if session['id'] == creator_id %}
-    <form method="GET">
-        <button type="submit" name="edit"   formaction="/edit/{{ board_name }}/{{ item[0] }}">Edit / Delete</button>
-    </form>
-    {% endif %}
-</div>
-<hr>
-
+    <div name="{{ item[0] }}"><img src='{{ item[3] }}'><br>
+        {{ item[1] + ", " + item[2] }} 
+        {% if session['id'] == creator_id %}
+        <form method="GET">
+            <button type="submit" name="edit"   formaction="/edit/{{ board_name }}/{{ item[0] }}">Edit / Delete</button>
+        </form>
+        {% endif %}
+    </div>
+    <br>
 {% endfor %}
 </ul>
+
 {% else %}
 <p>You do not have access. Please <a href="/login">login</a> with the correct user.</p>
 {% endif %}

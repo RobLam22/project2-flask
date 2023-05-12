@@ -12,4 +12,24 @@
 </form>
 <br>
 <hr>
+
+
+    {% if final_results != [] %}
+    <ul>
+    {% for item in final_results: %}
+    
+    <div name="{{ item[0] }}"><img src='{{ item[2] }}'><br>
+        {{ item[0] + ", " + item[1] }}
+        <p>From:<a href="/board/{{ item[3] }}"> {{ item[3] }}</a></p>
+    </div>
+    <hr>
+
+    {% endfor %}
+    </ul>
+
+    {% else %}
+    <p>No hashtags have been found! Please search again!</p>
+
+    {% endif %}
+
 {% endblock %}

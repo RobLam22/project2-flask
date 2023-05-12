@@ -41,14 +41,14 @@ board_list_id BIGINT -->
     function editPost(e) {
         e.preventDefault()
         return fetch('/edit/{{ table_name }}/{{ id }}', {method: 'PATCH', body: new FormData(form)})
-        .then(() => window.location.replace('/{{ table_name }}'))
+        .then(() => window.location.replace('/board/{{ table_name }}'))
     }
     form.addEventListener('submit', editPost);
 
     function deletePost() {
         return fetch('/delete/{{ table_name }}/{{ id }}', {
             method: 'DELETE',
-     }).then(() => window.location.replace('/{{ table_name }}'))
+     }).then(() => window.location.replace('/board/{{ table_name }}'))
     }
     const button = document.querySelector('#delete');
     button.addEventListener('click', deletePost);
