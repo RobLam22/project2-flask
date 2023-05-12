@@ -3,16 +3,13 @@
 
 {% block content %}
 <h1>Inspirest!</h1>
-<ul>
-{% for item in home_list: %}
-  
-<div><img src='{{ item[3] }}'><br>
-    {{ item[1] + ", " + item[2] }} </div>
 <hr>
 
+<ul>
+{% for item in home_list: %}
+<div><img src='{{ item[3] }}'><br>
+    {{ item[1] + ", " + item[2] }} </div>
 {% endfor %}
-
 </ul>
-
 
 {% endblock %}

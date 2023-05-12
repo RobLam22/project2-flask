@@ -238,7 +238,7 @@ def delete_post_action(table_name, id):
 def search_page():
     return render_template('/search.html')
 
-@app.route('/results', methods=["POST"])
+@app.route('/search/results', methods=["POST"])
 def search_action():
     form = request.form
     query = form.get('hashtag').lower()

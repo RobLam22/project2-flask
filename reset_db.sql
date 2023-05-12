@@ -4,6 +4,11 @@ DROP TABLE boardgame_board;
 DROP TABLE macbook_board;
 DROP TABLE cityscape_board;
 DROP TABLE marvel_movies;
+DROP TABLE dc_movies;
+DROP TABLE wes_anderson_symmetry;
+DROP TABLE doggos;
+DROP TABLE noodles;
+DROP TABLE anime;
 
 CREATE TABLE board_list (
   id SERIAL PRIMARY KEY,
@@ -143,15 +148,15 @@ INSERT INTO doggos(description, hashtag, image, user_id, board_list_id) VALUES (
 INSERT INTO doggos(description, hashtag, image, user_id, board_list_id) VALUES ('Samoyed', '#dogs#animals#pets', 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Samojed00.jpg/1280px-Samojed00.jpg', 3, 8);
 
 -- noodles
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Ramen', '#noodles#asian#food', 'https://www.forkknifeswoon.com/wp-content/uploads/2014/10/simple-homemade-chicken-ramen-fork-knife-swoon-01.jpg', 3,   9);
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Tonkotsu', '#noodles#asian#food', 'https://www.seriouseats.com/thmb/VRNLs0nXGchoBlj5LJ5hxCzlcbU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/rich-and-creamy-tonkotsu-ramen-broth-from-scratch-recipe-Diana-Chistruga-hero-6d318fadcca64cc9ac3e1c40fc7682fb.JPG', 3,   9);
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Yakisoba', '#noodles#asian#food', 'https://www.jocooks.com/wp-content/uploads/2021/06/yakisoba-1-11.jpg', 3,   9);
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Wonton Noodle Soup', '#noodles#asian#food', 'https://www.elmundoeats.com/wp-content/uploads/2022/10/Wonton-noodle-soup-in-a-bowl-view-from-up.jpg', 3, 9);
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Dan Dan Noodles', '#noodles#asian#food', 'https://www.recipetineats.com/wp-content/uploads/2020/02/Dan-Dan-Noodles_4-2.jpg', 3, 9);
+INSERT INTO noodles(description, hashtag, image, user_id, board_list_id) VALUES ('Ramen', '#noodles#asian#food', 'https://www.forkknifeswoon.com/wp-content/uploads/2014/10/simple-homemade-chicken-ramen-fork-knife-swoon-01.jpg', 3,   9);
+INSERT INTO noodles(description, hashtag, image, user_id, board_list_id) VALUES ('Tonkotsu', '#noodles#asian#food', 'https://www.seriouseats.com/thmb/VRNLs0nXGchoBlj5LJ5hxCzlcbU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/rich-and-creamy-tonkotsu-ramen-broth-from-scratch-recipe-Diana-Chistruga-hero-6d318fadcca64cc9ac3e1c40fc7682fb.JPG', 3,   9);
+INSERT INTO noodles(description, hashtag, image, user_id, board_list_id) VALUES ('Yakisoba', '#noodles#asian#food', 'https://www.jocooks.com/wp-content/uploads/2021/06/yakisoba-1-11.jpg', 3,   9);
+INSERT INTO noodles(description, hashtag, image, user_id, board_list_id) VALUES ('Wonton Noodle Soup', '#noodles#asian#food', 'https://www.elmundoeats.com/wp-content/uploads/2022/10/Wonton-noodle-soup-in-a-bowl-view-from-up.jpg', 3, 9);
+INSERT INTO noodles(description, hashtag, image, user_id, board_list_id) VALUES ('Dan Dan Noodles', '#noodles#asian#food', 'https://www.recipetineats.com/wp-content/uploads/2020/02/Dan-Dan-Noodles_4-2.jpg', 3, 9);
 
 -- anime
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Naruto', '#naruto#shonen#japanese', 'https://en.wikipedia.org/wiki/File:NarutoCoverTankobon1.jpg', 3,   10);
-INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Susanoooo', '#naruto#shonen#japanese', 'https://i.redd.it/9u15zs27u7w61.jpg', 3,   10);
+INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Naruto', '#naruto#shonen#japanese', 'https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg', 3,   10);
+INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Sasuke', '#naruto#shonen#japanese', 'https://upload.wikimedia.org/wikipedia/en/4/42/SasukeKishimoto.jpg', 3,   10);
 INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Bleach', '#bleach#shonen#bloodwar', 'https://www.animenewsnetwork.com/images/encyc/A25066-825432658.1659822888.jpg', 3,   10);
 INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Captains', '#bleach#shonen#bloodwar', 'https://wall.alphacoders.com/big.php?i=1255445', 3,   10);
 INSERT INTO anime(description, hashtag, image, user_id, board_list_id) VALUES ('Princess Mononoke', '#ghibli#animated#japanese', 'https://upload.wikimedia.org/wikipedia/en/8/8c/Princess_Mononoke_Japanese_poster.png', 3, 10);
@@ -209,6 +214,3 @@ INSERT INTO cityscape_board(description, hashtag, image, user_id, board_list_id)
 INSERT INTO cityscape_board(description, hashtag, image, user_id, board_list_id) VALUES ('City #10','#city#photography#architecture', 'https://picsum.photos/id/232/300/500', 1, 4);
 
 
--- psql -d p2 -f reset_db.sql -p 5433
--- PGPASSWORD=YsRbSGWctAQTPL8pX5sOear938QrwlLW psql -h dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com -U pgrender flaskdb_uiod 
--- PGPASSWORD=YsRbSGWctAQTPL8pX5sOear938QrwlLW psql -h dpg-ch8fge6si8uhth779pq0-a.oregon-postgres.render.com -U pgrender -f reset_db.sql flaskdb_uiod 
